@@ -13,15 +13,23 @@ Example 1
     from ssh_pymongo import MongoSession
 
     session = MongoSession('db.example.com')
-    # session.connection.database_names()
-
     db = session.connection['db-name']
-    collection = db['collection-name']
-
     session.stop()
     # session.start()
 
 Example 2
+---------
+
+.. code:: python
+
+    session = MongoSession(
+        host='db.example.com',
+        uri='mongodb://user:password@127.0.0.1/?authSource=admin&authMechanism=SCRAM-SHA-256'
+    )
+    ...
+    session.stop()
+
+Example 3
 ---------
 
 .. code:: python
@@ -34,7 +42,7 @@ Example 2
     ...
     session.stop()
 
-Example 3
+Example 4
 ---------
 
 .. code:: python
