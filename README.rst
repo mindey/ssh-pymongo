@@ -1,7 +1,7 @@
 ssh-pymongo
 -----------
 
-Just for convenience.
+Just for convenience. Note: `uri` parameter is assumed as local, after ssh.
 
 ``pip install ssh-pymongo``
 
