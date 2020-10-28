@@ -5,7 +5,7 @@ with open('README.rst', 'r', encoding='utf-8') as f:
 
 setup(
     name='ssh-pymongo',
-    version='1.0.2',
+    version='1.0.3',
     description='Simple shortcut for PyMongo over ssh.',
     long_description=long_description,
     long_description_content_type='text/rst',

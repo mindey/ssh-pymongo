@@ -38,46 +38,26 @@ class MongoSession:
     def start(self):
         self.server.start()
 
+        params = dict()
+
         if self.uri:
             uri = urllib.parse.urlparse(self.uri)
 
-            if uri.netloc:
-                user_pass = uri.netloc.split('@', 1)[0].split(':', 1)
-                if len(user_pass) == 2:
-                    mongo_user, mongo_pass = user_pass
-                elif len(user_pass) == 1:
-                    mongo_user, mongo_pass = user_pass, None
+            if '@' in uri.netloc:
+                user_pass = uri.netloc.split('@', 1)[0]
+                if ':' in user_pass:
+                    params['username'], params['password'] = user_pass.split(':', 1)
                 else:
-                    mongo_user, mongo_pass = None, None
-            else:
-                mongo_user, mongo_pass = (None, None)
+                    params['username'] = user_pass
 
             if uri.query:
                 auth_mech = urllib.parse.parse_qs(uri.query)
-                if 'authSource' in auth_mech:
-                    auth_db = auth_mech['authSource'][0]
-                else:
-                    auth_db = None
-                if 'authMechanism' in auth_mech:
-                    auth_mechanism = auth_mech['authMechanism'][0]
-                else:
-                    auth_mechanism = None
-            else:
-                auth_db, auth_mechanism = (None, None)
+                params.update({key: auth_mech[key][0] for key in auth_mech})
 
-            if all([mongo_user,  mongo_pass, auth_db, auth_mechanism]):
-                self.connection = pymongo.MongoClient(
-                    host=self.to_host,
-                    port=self.server.local_bind_port,
-                    username=mongo_user,
-                    password=mongo_pass,
-                    authSource=auth_db,
-                    authMechanism=auth_mechanism
-                )
-            else:
-                self.connection = pymongo.MongoClient(self.to_host, self.server.local_bind_port)
-        else:
-            self.connection = pymongo.MongoClient(self.to_host, self.server.local_bind_port)
+        self.connection = pymongo.MongoClient(
+            host=self.to_host,
+            port=self.server.local_bind_port,
+            **params)
 
     def stop(self):
         self.connection.close()
