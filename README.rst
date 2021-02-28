@@ -13,9 +13,8 @@ Example 1
     from ssh_pymongo import MongoSession
 
     session = MongoSession('db.example.com')
+
     db = session.connection['db-name']
-    session.stop()
-    # session.start()
 
 Example 2
 ---------
