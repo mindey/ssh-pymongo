@@ -6,11 +6,12 @@ import urllib
 
 class MongoSession:
 
-    def __init__(self, host, user=None, password=None, key=None, uri=None, port=22, to_host='127.0.0.1', to_port=27017):
+    def __init__(self, host, user=None, password=None, key=None, key_password = None, uri=None, port=22, to_host='127.0.0.1', to_port=27017):
 
         HOST = (host, port)
         USER = user or getpass.getuser()
         KEY = key or f'/home/{USER}/.ssh/id_rsa'
+        KEY_PASSWORD = key_password
         self.to_host = to_host
         self.uri = uri; URI = urllib.parse.urlparse(uri)
 
@@ -30,6 +31,7 @@ class MongoSession:
                 HOST,
                 ssh_username=USER,
                 ssh_pkey=KEY,
+                ssh_private_key_password = KEY_PASSWORD,
                 remote_bind_address=(to_host, to_port)
             )
 
